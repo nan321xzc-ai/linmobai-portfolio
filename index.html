@@ -273,12 +273,12 @@
         .masonry-item img,
         .masonry-item .border-glow-inner img {
             transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1), filter 1s ease;
-            filter: saturate(0.6) contrast(1.05) brightness(0.85);
+            filter: saturate(1) contrast(1.02) brightness(1);
             width: 100%; display: block;
         }
         .masonry-item:hover .border-glow-inner img {
             transform: scale(1.06);
-            filter: saturate(0.85) contrast(1.05) brightness(1);
+            filter: saturate(1.05) contrast(1.05) brightness(1.02);
         }
         .masonry-item .border-glow-inner .overlay-v2 {
             position: absolute; inset: 0;
@@ -366,6 +366,17 @@
             transform: translateY(40px) scale(0.96);
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .modal-gallery-img {
+            width: 100%;
+            display: block;
+            object-fit: contain;
+            background: #010101;
+            border-bottom: 1px solid rgba(245, 240, 232, 0.04);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-gallery-img:last-child {
+            border-bottom: none;
+        }
         .modal-overlay.active .modal-container { transform: translateY(0) scale(1); }
         .modal-close {
             position: absolute; top: 20px; right: 20px;
@@ -382,11 +393,13 @@
             border-color: #c4956a; transform: rotate(90deg);
         }
         .modal-close:focus-visible { outline: 2px solid #f5f0e8; outline-offset: 2px; }
-        .modal-grid { display: grid; grid-template-columns: 1.4fr 1fr; min-height: 500px; }
+        .modal-grid { display: grid; grid-template-columns: 1fr; min-height: 500px; }
         .modal-image-wrap { position: relative; overflow: hidden; background: #010101; }
+        .modal-image-wrap #modal-gallery {
+            width: 100%;
+        }
         .modal-image-wrap img {
-            width: 100%; height: 100%; object-fit: contain; background: #010101;
-            display: block; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%; display: block; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .modal-info {
             padding: 48px 40px;
@@ -436,7 +449,7 @@
 
         @media (max-width: 900px) {
             .modal-grid { grid-template-columns: 1fr; }
-            .modal-image-wrap { max-height: 300px; }
+            .modal-image-wrap { max-height: none; }
             .modal-info { padding: 32px 24px; }
             .modal-title { font-size: 1.8rem; }
             .modal-nav { padding: 16px 24px; }
@@ -1674,9 +1687,11 @@
     <div id="project-modal" class="modal-overlay" onclick="closeModalOnOverlay(event)" role="dialog" aria-modal="true" aria-label="项目详情">
         <div class="modal-container" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeProjectModal()" aria-label="关闭项目详情">&times;</button>
-            <div class="modal-grid">
-                <div class="modal-image-wrap">
-                    <img id="modal-img" src="" alt="" style="transform: scale(1.05);">
+            <div class="modal-grid" style="grid-template-columns: 1fr;">
+                <div class="modal-image-wrap" style="padding: 0;">
+                    <div id="modal-gallery" style="display: flex; flex-direction: column; gap: 0;">
+                        <!-- 图片将通过 JS 动态插入 -->
+                    </div>
                 </div>
                 <div class="modal-info">
                     <div class="modal-meta-top">
@@ -1992,14 +2007,14 @@
 
         // ===== PROJECTS DATA =====
         const projects = [
-            {"id": 1, "title": "UIOT超级智慧家 · GEO合作战略发布会", "category": "brand", "year": "2026.06", "description": "全屋智能行业 AI 数字化获客新模式主视觉设计", "client": "超级智慧家（上海）物联网科技有限公司", "tags": "品牌识别、视觉系统、活动主视觉", "detail": "全屋智能行业 AI 数字化获客新模式主视觉设计。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。项目涵盖主视觉设计、延展物料、现场布置等全链路视觉落地。", "image": "project-01.png"},
-            {"id": 2, "title": "墨染咖啡", "category": "brand", "year": "2024", "description": "东方美学与现代咖啡文化的视觉融合", "client": "墨染咖啡", "tags": "品牌识别、视觉系统、包装设计", "detail": "东方美学与现代咖啡文化的视觉融合。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&h=800&fit=crop"},
-            {"id": 3, "title": "流光时尚", "category": "strategy", "year": "2024", "description": "高端女装品牌的全案视觉升级", "client": "流光时尚", "tags": "视觉策略、品牌升级、Campaign", "detail": "高端女装品牌的全案视觉升级。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "image": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1200&h=800&fit=crop"},
-            {"id": 4, "title": "青禾文化", "category": "brand", "year": "2023", "description": "艺术展览机构的视觉识别与空间导视", "client": "青禾文化", "tags": "品牌识别、视觉系统、空间导视", "detail": "艺术展览机构的视觉识别与空间导视。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "image": "https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=1200&h=800&fit=crop"},
-            {"id": 5, "title": "星辰教育", "category": "digital", "year": "2023", "description": "在线教育平台的品牌重塑与UI/UX", "client": "星辰教育", "tags": "数字体验、UI/UX、品牌设计", "detail": "在线教育平台的品牌重塑与UI/UX。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "image": "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=1200&h=800&fit=crop"},
-            {"id": 6, "title": "野境户外", "category": "brand", "year": "2022", "description": "户外装备品牌的野性美学视觉系统", "client": "野境户外", "tags": "品牌识别、视觉系统、包装设计", "detail": "户外装备品牌的野性美学视觉系统。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop"},
-            {"id": 7, "title": "智链科技", "category": "brand", "year": "2025", "description": "区块链企业的品牌识别与视觉系统", "client": "智链科技", "tags": "品牌识别、视觉系统、科技品牌", "detail": "区块链企业的品牌识别与视觉系统。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "image": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&h=800&fit=crop"},
-            {"id": 8, "title": "锦绣华服", "category": "strategy", "year": "2024", "description": "传统服饰品牌的现代化视觉升级", "client": "锦绣华服", "tags": "视觉策略、品牌升级、Campaign", "detail": "传统服饰品牌的现代化视觉升级。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "image": "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&h=800&fit=crop"}
+            {"id": 1, "title": "UIOT超级智慧家 · GEO合作战略发布会", "category": "brand", "year": "2026.06", "description": "全屋智能行业 AI 数字化获客新模式主视觉设计", "client": "超级智慧家（上海）物联网科技有限公司", "tags": "品牌识别、视觉系统、活动主视觉", "detail": "全屋智能行业 AI 数字化获客新模式主视觉设计。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。项目涵盖主视觉设计、延展物料、现场布置等全链路视觉落地。", "images": ["project-01.png", "project-02.png"]},
+            {"id": 2, "title": "墨染咖啡", "category": "brand", "year": "2024", "description": "东方美学与现代咖啡文化的视觉融合", "client": "墨染咖啡", "tags": "品牌识别、视觉系统、包装设计", "detail": "东方美学与现代咖啡文化的视觉融合。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "images": ["https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&h=800&fit=crop"]},
+            {"id": 3, "title": "流光时尚", "category": "strategy", "year": "2024", "description": "高端女装品牌的全案视觉升级", "client": "流光时尚", "tags": "视觉策略、品牌升级、Campaign", "detail": "高端女装品牌的全案视觉升级。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "images": ["https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1200&h=800&fit=crop"]},
+            {"id": 4, "title": "青禾文化", "category": "brand", "year": "2023", "description": "艺术展览机构的视觉识别与空间导视", "client": "青禾文化", "tags": "品牌识别、视觉系统、空间导视", "detail": "艺术展览机构的视觉识别与空间导视。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "images": ["https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=1200&h=800&fit=crop"]},
+            {"id": 5, "title": "星辰教育", "category": "digital", "year": "2023", "description": "在线教育平台的品牌重塑与UI/UX", "client": "星辰教育", "tags": "数字体验、UI/UX、品牌设计", "detail": "在线教育平台的品牌重塑与UI/UX。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "images": ["https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=1200&h=800&fit=crop"]},
+            {"id": 6, "title": "野境户外", "category": "brand", "year": "2022", "description": "户外装备品牌的野性美学视觉系统", "client": "野境户外", "tags": "品牌识别、视觉系统、包装设计", "detail": "户外装备品牌的野性美学视觉系统。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "images": ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop"]},
+            {"id": 7, "title": "智链科技", "category": "brand", "year": "2025", "description": "区块链企业的品牌识别与视觉系统", "client": "智链科技", "tags": "品牌识别、视觉系统、科技品牌", "detail": "区块链企业的品牌识别与视觉系统。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "images": ["https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&h=800&fit=crop"]},
+            {"id": 8, "title": "锦绣华服", "category": "strategy", "year": "2024", "description": "传统服饰品牌的现代化视觉升级", "client": "锦绣华服", "tags": "视觉策略、品牌升级、Campaign", "detail": "传统服饰品牌的现代化视觉升级。以策略驱动设计，以设计赋能商业，打造兼具美学价值与商业影响力的品牌视觉体系。", "images": ["https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&h=800&fit=crop"]}
         ];
 
         let currentProjectId = null;
@@ -2011,8 +2026,27 @@
 
             const catMap = { 'brand': '品牌识别', 'strategy': '视觉策略', 'digital': '数字体验' };
 
-            document.getElementById('modal-img').src = project.image;
-            document.getElementById('modal-img').alt = project.title;
+            // 渲染多图画廊
+            const galleryEl = document.getElementById('modal-gallery');
+            galleryEl.innerHTML = '';
+            if (project.images && project.images.length > 0) {
+                project.images.forEach((imgSrc, idx) => {
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.alt = project.title + (project.images.length > 1 ? ' - 图 ' + (idx + 1) : '');
+                    img.className = 'modal-gallery-img';
+                    img.loading = idx === 0 ? 'eager' : 'lazy';
+                    galleryEl.appendChild(img);
+                });
+            } else if (project.image) {
+                // 兼容旧数据
+                const img = document.createElement('img');
+                img.src = project.image;
+                img.alt = project.title;
+                img.className = 'modal-gallery-img';
+                galleryEl.appendChild(img);
+            }
+
             document.getElementById('modal-title').textContent = project.title;
             document.getElementById('modal-category').textContent = catMap[project.category] || project.category;
             document.getElementById('modal-year').textContent = project.year;
@@ -2025,10 +2059,6 @@
             const modal = document.getElementById('project-modal');
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-
-            const img = document.getElementById('modal-img');
-            img.style.transform = 'scale(1.05)';
-            requestAnimationFrame(() => { img.style.transform = 'scale(1)'; });
         }
 
         function closeProjectModal() {
@@ -2036,8 +2066,8 @@
             modal.classList.remove('active');
             document.body.style.overflow = '';
             setTimeout(() => { 
-                const img = document.getElementById('modal-img');
-                if (img) img.src = ''; 
+                const gallery = document.getElementById('modal-gallery');
+                if (gallery) gallery.innerHTML = ''; 
             }, 400);
         }
 
